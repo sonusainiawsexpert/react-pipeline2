@@ -3,6 +3,10 @@ pipeline {
         label 'Jenkins-docker-agent'
     }
 
+    tools{
+        nodejs 'nodejs-lts'
+    }
+
     environment {
         APP_NAME = "react-pipeline2"
         RELEASE = "1.0.0"
