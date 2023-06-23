@@ -48,7 +48,7 @@ pipeline {
         stage("Sonarqube Analysis") {
             steps {
                 script {
-                    def scannerHome = tool 'SonarScanner';
+                    def scannerHome = tool 'sonarqube-scanner';
                     withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token') {
                         sh "${tool("sonarscan ")}/bin/sonar-scanner -Dsonar.projectKey=react-pipeline2 -Dsonar.projectName=react-pipeline2"
                     }
