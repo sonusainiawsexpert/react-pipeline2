@@ -56,16 +56,16 @@ pipeline {
             }
         }
 
-        // stage ('Remove docker container and images') {
-        //     steps {
-        //         script {
-        //             sh "docker stop ${CONTAINER_NAME}"
-        //             sh "docker rm ${CONTAINER_NAME}"
-        //             sh "docker rmi ${IMAGE_NAME}:${IMAGE_TAG}"
-        //             sh "docker rmi ${IMAGE_NAME}:latest"
-        //         }
-        //     }
-        // }
+        stage ('Remove docker container and images') {
+            steps {
+                script {
+                    sh "docker stop ${CONTAINER_NAME}"
+                    sh "docker rm ${CONTAINER_NAME}"
+                    sh "docker rmi ${IMAGE_NAME}:${IMAGE_TAG}"
+                    sh "docker rmi ${IMAGE_NAME}:latest"
+                }
+            }
+        }
 
         stage('Deploy') {
             steps {
