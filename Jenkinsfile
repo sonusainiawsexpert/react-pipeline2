@@ -5,6 +5,7 @@ pipeline {
 
     tools{
         nodejs 'nodejs-lts'
+        jdk 'Java17'
     }
 
     environment {
@@ -43,6 +44,27 @@ pipeline {
             }
         }
 
+        stage("Sonarqube Analysis") {
+            steps {
+                script {
+                    withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token') {
+                        sh 'yarn add --dev sonarqube-scanner'
+                        sh 'node ./sonarqube/sonarscan.js'
+                    }
+                }
+            }
+
+        }
+
+        stage("Quality Gate") {
+            steps {
+                script {
+                    waitForQualityGate abortPipeline: false, credentialsId: 'jenkins-sonarqube-token'
+                }
+            }
+
+        }
+
 
         stage('Build and Push in Dockerhub') {
             steps {
@@ -72,5 +94,18 @@ pipeline {
                 sh "docker run -d -p 8085:80 --restart always --name ${CONTAINER_NAME} ${IMAGE_NAME}"
             }
         }
+    }
+
+        post {
+        failure {
+            emailext body: '''${SCRIPT, template="groovy-html.template"}''', 
+                    subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - Failed", 
+                    mimeType: 'text/html',to: "dmistry@yourhostdirect.com"
+            }
+         success {
+               emailext body: '''${SCRIPT, template="groovy-html.template"}''', 
+                    subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - Successful", 
+                    mimeType: 'text/html',to: "dmistry@yourhostdirect.com"
+          }      
     }
 }
