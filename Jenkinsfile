@@ -47,9 +47,9 @@ pipeline {
         stage("Sonarqube Analysis") {
             steps {
                 script {
+                    def scannerHome = tool 'SonarScanner';
                     withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token') {
-                        sh 'yarn add --dev sonarqube-scanner'
-                        sh 'node ./sonarqube/sonarscan.js'
+                        sh "${scannerHome}/bin/sonar-scanner"
                     }
                 }
             }
