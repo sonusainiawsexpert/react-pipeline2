@@ -50,7 +50,7 @@ pipeline {
                 script {
                     def scannerHome = tool 'sonarqube-scanner';
                     withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token') {
-                        sh "${tool("sonarscan")}/bin/sonar-scanner -Dsonar.projectKey=react-pipeline2 -Dsonar.projectName=react-pipeline2"
+                        sh "${tool("sonarqube-scanner")}/bin/sonar-scanner -Dsonar.projectKey=react-pipeline2 -Dsonar.projectName=react-pipeline2"
                     }
                 }
             }
