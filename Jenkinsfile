@@ -6,6 +6,7 @@ pipeline {
     tools{
         nodejs 'nodejs-lts'
         jdk 'Java17'
+        
     }
 
     environment {
@@ -49,7 +50,7 @@ pipeline {
                 script {
                     def scannerHome = tool 'SonarScanner';
                     withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token') {
-                        sh "${scannerHome}/bin/sonar-scanner"
+                        sh "${tool("sonarscan ")}/bin/sonar-scanner -Dsonar.projectKey=react-pipeline2 -Dsonar.projectName=react-pipeline2"
                     }
                 }
             }
