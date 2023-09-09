@@ -1,5 +1,7 @@
 pipeline {
-        agent none
+        agent {
+            label 'windows' 
+        }
 
     tools{
         nodejs 'node'
