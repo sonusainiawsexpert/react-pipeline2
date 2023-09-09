@@ -1,4 +1,7 @@
 pipeline {
+        agent {
+        label none
+    }
 
     tools{
         nodejs 'node'
