@@ -1,21 +1,18 @@
 pipeline {
-    agent{
-        label 'Jenkins-docker-agent'
-    }
 
     tools{
-        nodejs 'nodejs-lts'
-        jdk 'Java17'
+        nodejs 'node'
+        jdk 'Java'
         
     }
 
     environment {
         APP_NAME = "react-pipeline2"
         RELEASE = "1.0.0"
-        DOCKER_USER = "hiteshsn785"
+        DOCKER_USER = "ersonusaini"
         IMAGE_NAME = "${DOCKER_USER}" + "/" + "${APP_NAME}"
         IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
-        DOCKER_PASS = "Docker-login"
+        DOCKER_PASS = "docker-token"
         CONTAINER_NAME = "react-pipeline2"
     }
 
@@ -28,7 +25,7 @@ pipeline {
 
         stage('Git Checkout with SCM') {
             steps {
-                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'github-login', url: 'https://github.com/hiteshsaini33/react-pipeline2']])
+                checkout scmGit(branches: [[name: '*/main']], extensions: [])
             }
         }
 
@@ -45,26 +42,26 @@ pipeline {
             }
         }
 
-        stage("Sonarqube Analysis") {
-            steps {
-                script {
-                    def scannerHome = tool 'sonarqube-scanner';
-                    withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token') {
-                        sh "${tool("sonarqube-scanner")}/bin/sonar-scanner -Dsonar.projectKey=react-pipeline2 -Dsonar.projectName=react-pipeline2"
-                    }
-                }
-            }
+        // stage("Sonarqube Analysis") {
+        //     steps {
+        //         script {
+        //             def scannerHome = tool 'sonarqube-scanner';
+        //             withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token') {
+        //                 sh "${tool("sonarqube-scanner")}/bin/sonar-scanner -Dsonar.projectKey=react-pipeline2 -Dsonar.projectName=react-pipeline2"
+        //             }
+        //         }
+        //     }
 
-        }
+        // }
 
-        stage("Quality Gate") {
-            steps {
-                script {
-                    waitForQualityGate abortPipeline: false, credentialsId: 'jenkins-sonarqube-token'
-                }
-            }
+        // stage("Quality Gate") {
+        //     steps {
+        //         script {
+        //             waitForQualityGate abortPipeline: false, credentialsId: 'jenkins-sonarqube-token'
+        //         }
+        //     }
 
-        }
+        // }
 
 
         stage('Build and Push in Dockerhub') {
@@ -79,16 +76,16 @@ pipeline {
             }
         }
 
-        stage ('Remove docker container and images') {
-            steps {
-                script {
-                    sh "docker stop ${CONTAINER_NAME}"
-                    sh "docker rm ${CONTAINER_NAME}"
-                    sh "docker rmi ${IMAGE_NAME}:${IMAGE_TAG}"
-                    sh "docker rmi ${IMAGE_NAME}:latest"
-                }
-            }
-        }
+        // stage ('Remove docker container and images') {
+        //     steps {
+        //         script {
+        //             sh "docker stop ${CONTAINER_NAME}"
+        //             sh "docker rm ${CONTAINER_NAME}"
+        //             sh "docker rmi ${IMAGE_NAME}:${IMAGE_TAG}"
+        //             sh "docker rmi ${IMAGE_NAME}:latest"
+        //         }
+        //     }
+        // }
 
         stage('Deploy') {
             steps {
@@ -97,16 +94,16 @@ pipeline {
         }
     }
 
-        post {
-        failure {
-            emailext body: '''${SCRIPT, template="groovy-html.template"}''', 
-                    subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - Failed", 
-                    mimeType: 'text/html',to: "sainihitesh33@gmail.com"
-            }
-         success {
-               emailext body: '''${SCRIPT, template="groovy-html.template"}''', 
-                    subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - Successful", 
-                    mimeType: 'text/html',to: "sainihitesh33@gmail.com"
-          }      
-    }
+    //     post {
+    //     failure {
+    //         emailext body: '''${SCRIPT, template="groovy-html.template"}''', 
+    //                 subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - Failed", 
+    //                 mimeType: 'text/html',to: "sainihitesh33@gmail.com"
+    //         }
+    //      success {
+    //            emailext body: '''${SCRIPT, template="groovy-html.template"}''', 
+    //                 subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - Successful", 
+    //                 mimeType: 'text/html',to: "sainihitesh33@gmail.com"
+    //       }      
+    // }
 }
