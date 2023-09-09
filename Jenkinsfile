@@ -28,7 +28,7 @@ pipeline {
 
         stage('Git Checkout with SCM') {
             steps {
-                checkout scmGit(branches: [[name: '*/main']], extensions: [])
+                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/sonusainiawsexpert/react-pipeline2.git']])
             }
         }
 
