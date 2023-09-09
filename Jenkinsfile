@@ -45,27 +45,6 @@ pipeline {
             }
         }
 
-        // stage("Sonarqube Analysis") {
-        //     steps {
-        //         script {
-        //             def scannerHome = tool 'sonarqube-scanner';
-        //             withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token') {
-        //                 sh "${tool("sonarqube-scanner")}/bin/sonar-scanner -Dsonar.projectKey=react-pipeline2 -Dsonar.projectName=react-pipeline2"
-        //             }
-        //         }
-        //     }
-
-        // }
-
-        // stage("Quality Gate") {
-        //     steps {
-        //         script {
-        //             waitForQualityGate abortPipeline: false, credentialsId: 'jenkins-sonarqube-token'
-        //         }
-        //     }
-
-        // }
-
 
         stage('Build and Push in Dockerhub') {
             steps {
@@ -79,34 +58,10 @@ pipeline {
             }
         }
 
-        // stage ('Remove docker container and images') {
-        //     steps {
-        //         script {
-        //             sh "docker stop ${CONTAINER_NAME}"
-        //             sh "docker rm ${CONTAINER_NAME}"
-        //             sh "docker rmi ${IMAGE_NAME}:${IMAGE_TAG}"
-        //             sh "docker rmi ${IMAGE_NAME}:latest"
-        //         }
-        //     }
-        // }
-
         stage('Deploy') {
             steps {
                 sh "docker run -d -p 8085:80 --restart always --name ${CONTAINER_NAME} ${IMAGE_NAME}"
             }
         }
     }
-
-    //     post {
-    //     failure {
-    //         emailext body: '''${SCRIPT, template="groovy-html.template"}''', 
-    //                 subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - Failed", 
-    //                 mimeType: 'text/html',to: "sainihitesh33@gmail.com"
-    //         }
-    //      success {
-    //            emailext body: '''${SCRIPT, template="groovy-html.template"}''', 
-    //                 subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - Successful", 
-    //                 mimeType: 'text/html',to: "sainihitesh33@gmail.com"
-    //       }      
-    // }
 }
