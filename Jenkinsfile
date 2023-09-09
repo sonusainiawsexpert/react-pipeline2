@@ -5,8 +5,6 @@ pipeline {
 
     tools{
         nodejs 'node'
-        jdk 'Java'
-        
     }
 
     environment {
