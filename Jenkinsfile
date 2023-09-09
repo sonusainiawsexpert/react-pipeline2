@@ -39,7 +39,7 @@ pipeline {
 
         stage('test') {
             steps {
-                sh 'npm run test'
+                bat 'npm run test'
             }
         }
 
