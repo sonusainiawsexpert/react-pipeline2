@@ -32,8 +32,8 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'npm install'
-                sh 'npm run build'
+                bat 'npm install'
+                bat 'npm run build'
             }
         }
 
@@ -58,7 +58,7 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                sh "docker run -d -p 8085:80 --restart always --name ${CONTAINER_NAME} ${IMAGE_NAME}"
+                bat "docker run -d -p 8085:80 --restart always --name ${CONTAINER_NAME} ${IMAGE_NAME}"
             }
         }
     }
